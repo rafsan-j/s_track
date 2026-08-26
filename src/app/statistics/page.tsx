@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase";
-import Link from "next/link";
+import { AppSidebar } from "@/components/AppSidebar";
 
 export default function StatisticsPage() {
   const supabase = createClient();
@@ -134,28 +134,8 @@ export default function StatisticsPage() {
 
   return (
     <div className="flex min-h-screen bg-slate-950 text-slate-300 font-sans">
-      
-      {/* Sidebar Navigation */}
-      <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col hidden md:flex">
-        <div className="p-6 border-b border-slate-800">
-          <h1 className="text-xl font-bold text-slate-100">Study OS</h1>
-        </div>
-        <nav className="flex-1 px-4 py-6 space-y-2">
-          <Link href="/" className="block px-4 py-2 rounded-md hover:bg-slate-800/50 transition-colors">Dashboard</Link>
-          <Link href="/study" className="block px-4 py-2 rounded-md hover:bg-slate-800/50 transition-colors">Study Workspace</Link>
-          <Link href="/planner" className="block px-4 py-2 rounded-md hover:bg-slate-800/50 transition-colors">Daily Planner</Link>
-          <Link href="/sessions" className="block px-4 py-2 rounded-md hover:bg-slate-800/50 transition-colors">Study Timer</Link>
-          <Link href="/statistics" className="block px-4 py-2 rounded-md bg-blue-900/20 text-blue-400 font-medium border border-blue-900/50">Statistics</Link>
-          <div className="pt-4 pb-2">
-            <p className="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Manage</p>
-          </div>
-          <Link href="/manage" className="block px-4 py-2 rounded-md hover:bg-slate-800/50 text-sm transition-colors">Years & Semesters</Link>
-          <Link href="/manage/courses" className="block px-4 py-2 rounded-md hover:bg-slate-800/50 text-sm transition-colors">Courses</Link>
-          <Link href="/manage/curriculum" className="block px-4 py-2 rounded-md hover:bg-slate-800/50 text-sm transition-colors">Curriculum</Link>
-        </nav>
-      </aside>
+      <AppSidebar />
 
-      {/* Main Content */}
       <main className="flex-1 p-8 overflow-y-auto">
         <header className="mb-8">
           <h2 className="text-3xl font-bold text-slate-100">Analytics</h2>

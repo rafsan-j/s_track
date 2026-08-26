@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 
 export default function LoginPage() {
@@ -8,6 +9,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   
   const supabase = createClient();
 
@@ -37,7 +39,10 @@ export default function LoginPage() {
     });
 
     if (error) setMessage(error.message);
-    else setMessage("Signed in successfully! (Routing coming in next steps)");
+    else {
+      router.push("/");
+      router.refresh();
+    }
     setLoading(false);
   };
 

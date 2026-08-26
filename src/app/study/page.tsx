@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase";
+import { AppSidebar } from "@/components/AppSidebar";
 
 export default function StudyPage() {
   const supabase = createClient();
@@ -85,8 +86,10 @@ export default function StudyPage() {
   const courseProgress = getCourseProgress();
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-300 p-8 max-w-5xl mx-auto">
-      <header className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div className="flex min-h-screen bg-slate-950 text-slate-300">
+      <AppSidebar />
+      <div className="flex-1 p-8 max-w-6xl mx-auto">
+        <header className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-slate-100">Study Workspace</h1>
           <p className="text-slate-400">Track your progress and access your materials.</p>
@@ -177,6 +180,7 @@ export default function StudyPage() {
             No curriculum found. Build it in the Manage tab!
           </div>
         )}
+      </div>
       </div>
     </div>
   );
