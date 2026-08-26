@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase";
 import Link from "next/link";
 import { AppSidebar } from "@/components/AppSidebar";
+import { ArrowUpRight, BookOpen, CheckCircle2, Circle } from "lucide-react";
 
 export default function Dashboard() {
   const supabase = createClient();
@@ -94,7 +95,7 @@ export default function Dashboard() {
     setSemesterProgress(Math.round(totalSemesterProgress / courses.length));
 
     // --- EXISTING: Calculate Resume Queue ---
-    let queue = [];
+    const queue = [];
     for (const course of courses) {
       const { data: latestResource } = await supabase
         .from("resources")
@@ -128,10 +129,10 @@ export default function Dashboard() {
       <AppSidebar />
 
       <main className="flex-1 p-8 overflow-y-auto">
-        <header className="mb-8 flex justify-between items-end">
+        <header className="mb-8 flex items-end justify-between gap-4">
           <div>
-            <h2 className="text-3xl font-bold text-slate-100">Dashboard</h2>
-            <p className="text-slate-400 mt-2">Welcome back. Here is your current academic overview.</p>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-blue-400">Overview</p>
+            <h2 className="text-3xl font-bold tracking-tight text-slate-100">Your semester</h2>
           </div>
           
           {resumeQueue.length > 0 && (
@@ -139,15 +140,17 @@ export default function Dashboard() {
               href={resumeQueue[0].resourceUrl} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="hidden md:inline-flex bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md font-medium transition-colors shadow-lg shadow-blue-900/20"
+              className="hidden items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-lg shadow-blue-900/20 transition-colors hover:bg-blue-700 md:inline-flex"
             >
-              Resume: {resumeQueue[0].courseName}
+              <BookOpen size={16} aria-hidden="true" />
+              Resume study
+              <ArrowUpRight size={15} aria-hidden="true" />
             </a>
           )}
         </header>
 
         {!currentSemester ? (
-          <div className="bg-slate-900 border border-slate-800 p-8 rounded-lg text-center">
+          <div className="rounded-xl border border-slate-800 bg-slate-900 p-8 text-center">
             <h3 className="text-lg font-medium text-slate-200 mb-2">No Setup Found</h3>
             <p className="text-slate-400 mb-4">You need to create an Academic Year and Semester first.</p>
             <Link href="/manage" className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded transition-colors">Go to Settings</Link>
@@ -156,32 +159,51 @@ export default function Dashboard() {
           <div className="space-y-8">
             
             {/* Progress Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(220px,0.8fr)_minmax(0,1.6fr)]">
               {/* Overall Semester Progress Card */}
-              <div className="bg-slate-900 border border-slate-800 p-6 rounded-lg flex flex-col justify-center">
-                <h3 className="text-lg font-semibold text-slate-200 mb-2">Overall Progress</h3>
-                <p className="text-sm text-slate-400 mb-4">{currentSemester.name}</p>
-                <div className="flex items-end gap-2 mb-2">
-                  <span className="text-4xl font-bold text-blue-400">{semesterProgress}%</span>
-                  <span className="text-sm text-slate-500 mb-1">completed</span>
+              <div className="relative min-h-[172px] overflow-hidden rounded-xl border border-slate-800 bg-slate-900 p-6">
+                <div className="relative z-10 pr-28">
+                  <p className="text-sm font-medium text-slate-400">{currentSemester.name}</p>
+                  <div className="mt-5 flex items-end gap-2">
+                    <span className="text-5xl font-bold tracking-tight text-blue-400">{semesterProgress}</span>
+                    <span className="mb-1 text-sm text-slate-500">%</span>
+                  </div>
+                  <p className="mt-1 text-sm text-slate-400">semester progress</p>
                 </div>
-                <div className="w-full bg-slate-950 rounded-full h-2 mt-2">
-                  <div className="bg-blue-600 h-2 rounded-full transition-all duration-1000" style={{ width: `${semesterProgress}%` }}></div>
+                <div className="absolute right-5 top-1/2 h-28 w-28 -translate-y-1/2" aria-hidden="true">
+                  <svg viewBox="0 0 112 112" className="h-full w-full -rotate-90">
+                    <circle cx="56" cy="56" r="48" fill="none" stroke="rgb(30 41 59 / 0.8)" strokeWidth="10" />
+                    <circle
+                      cx="56"
+                      cy="56"
+                      r="48"
+                      fill="none"
+                      stroke="rgb(96 165 250)"
+                      strokeLinecap="round"
+                      strokeWidth="10"
+                      strokeDasharray="301.59"
+                      strokeDashoffset={301.59 - (301.59 * semesterProgress) / 100}
+                      className="transition-[stroke-dashoffset] duration-700 ease-out"
+                    />
+                  </svg>
                 </div>
               </div>
 
               {/* Individual Course Progress Bars */}
-              <div className="lg:col-span-2 bg-slate-900 border border-slate-800 p-6 rounded-lg">
-                <h3 className="text-lg font-semibold text-slate-200 mb-6">Course Breakdown</h3>
-                <div className="space-y-5">
+              <div className="rounded-xl border border-slate-800 bg-slate-900 p-6">
+                <div className="mb-5 flex items-center justify-between">
+                  <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-400">Courses</h3>
+                  <span className="text-xs text-slate-600">{courseProgresses.length} active</span>
+                </div>
+                <div className="space-y-4">
                   {courseProgresses.map(course => (
                     <div key={course.id}>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span className="font-medium text-slate-300">{course.name}</span>
-                        <span className="text-slate-400">{course.progress}%</span>
+                      <div className="mb-2 flex items-center justify-between gap-3 text-sm">
+                        <span className="truncate font-medium text-slate-200">{course.name}</span>
+                        <span className="shrink-0 tabular-nums text-slate-400">{course.progress}%</span>
                       </div>
-                      <div className="w-full bg-slate-950 rounded-full h-1.5">
-                        <div className="bg-slate-400 h-1.5 rounded-full transition-all duration-1000" style={{ width: `${course.progress}%` }}></div>
+                      <div className="h-2 w-full overflow-hidden rounded-full bg-slate-950">
+                        <div className="h-full rounded-full bg-blue-400 transition-all duration-1000" style={{ width: `${course.progress}%` }}></div>
                       </div>
                     </div>
                   ))}
@@ -194,38 +216,41 @@ export default function Dashboard() {
             
             {/* Resume Queue Section */}
             <div>
-              <h3 className="text-xl font-semibold text-slate-200 border-b border-slate-800 pb-2 mb-6">Continue Where You Left Off</h3>
+              <div className="mb-4 flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-400">Continue</h3>
+                <BookOpen size={18} className="text-slate-600" aria-hidden="true" />
+              </div>
               {resumeQueue.length === 0 ? (
                 <p className="text-slate-500 italic">No resources tracked yet. Add some resources and update their status in the Study Workspace.</p>
               ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="divide-y divide-slate-800/80 overflow-hidden rounded-xl border border-slate-800 bg-slate-900">
                   {resumeQueue.map((item, index) => (
-                    <div key={item.courseId} className={`bg-slate-900 border ${index === 0 ? 'border-blue-900/50 shadow-md shadow-blue-900/10' : 'border-slate-800'} p-6 rounded-lg flex flex-col justify-between transition-all hover:border-slate-700`}>
-                      <div>
-                        <div className="flex justify-between items-start mb-2">
-                          <h4 className="text-lg font-bold text-slate-200">{item.courseName}</h4>
-                          {index === 0 && <span className="text-[10px] uppercase font-bold bg-blue-900/30 text-blue-400 px-2 py-1 rounded">Latest</span>}
-                        </div>
-                        <p className="text-sm text-slate-400 font-medium mb-1">{item.topicTitle}</p>
-                        <p className="text-sm text-slate-300 line-clamp-1">{item.resourceTitle}</p>
+                    <div key={item.courseId} className={`flex items-center gap-4 p-4 transition-colors hover:bg-slate-800/40 ${index === 0 ? 'bg-blue-500/[0.04]' : ''}`}>
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-800 text-blue-400">
+                        {index === 0 ? <CheckCircle2 size={18} aria-hidden="true" /> : <Circle size={18} aria-hidden="true" />}
                       </div>
-                      
-                      <div className="mt-6 flex gap-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <h4 className="truncate text-sm font-semibold text-slate-200">{item.courseName}</h4>
+                          {index === 0 && <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-blue-400">Latest</span>}
+                        </div>
+                        <p className="mt-1 truncate text-xs text-slate-500">{item.topicTitle} · {item.resourceTitle}</p>
+                      </div>
                         <a 
                           href={item.resourceUrl} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded font-medium transition-colors text-center flex-1"
+                          className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-blue-600 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-blue-700"
                         >
-                          Open Resource
+                          Open <ArrowUpRight size={14} aria-hidden="true" />
                         </a>
-                        <Link 
+                        <Link
                           href="/study" 
-                          className="bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm px-4 py-2 rounded font-medium transition-colors text-center"
+                          aria-label={`Open workspace for ${item.courseName}`}
+                          className="hidden rounded-lg bg-slate-800 px-3 py-2 text-xs font-medium text-slate-200 transition-colors hover:bg-slate-700 sm:inline-flex"
                         >
                           Workspace
                         </Link>
-                      </div>
                     </div>
                   ))}
                 </div>

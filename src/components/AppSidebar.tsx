@@ -43,7 +43,7 @@ export function AppSidebar() {
     <aside
       className={[
         "relative flex h-screen shrink-0 flex-col border-r border-slate-800/80 bg-slate-900/90 backdrop-blur-xl transition-all duration-300",
-        collapsed ? "w-20" : "w-72",
+        collapsed ? "w-20" : "w-60",
       ].join(" ")}
     >
       <div className="flex items-center justify-between border-b border-slate-800/80 px-4 py-4">
@@ -69,10 +69,10 @@ export function AppSidebar() {
               key={item.href}
               href={item.href}
               className={[
-                "flex items-center rounded-xl border px-3 py-2.5 text-sm font-medium transition-all duration-200",
+                "flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
                 active
-                  ? "border-blue-500/40 bg-blue-500/10 text-blue-300 shadow-sm shadow-blue-500/10"
-                  : "border-transparent text-slate-300 hover:border-slate-700 hover:bg-slate-800/70",
+                  ? "bg-blue-500/10 text-blue-300"
+                  : "text-slate-400 hover:bg-slate-800/60 hover:text-slate-100",
                 collapsed ? "justify-center px-0" : "justify-start",
               ].join(" ")}
               title={collapsed ? item.label : undefined}
@@ -97,10 +97,10 @@ export function AppSidebar() {
               key={item.href}
               href={item.href}
               className={[
-                "flex items-center rounded-xl border px-3 py-2 text-sm transition-all duration-200",
+                "flex items-center rounded-lg px-3 py-2 text-sm transition-all duration-200",
                 active
-                  ? "border-blue-500/40 bg-blue-500/10 text-blue-300"
-                  : "border-transparent text-slate-300 hover:border-slate-700 hover:bg-slate-800/70",
+                  ? "bg-blue-500/10 text-blue-300"
+                  : "text-slate-500 hover:bg-slate-800/60 hover:text-slate-200",
                 collapsed ? "justify-center px-0" : item.small ? "justify-start" : "justify-start",
               ].join(" ")}
               title={collapsed ? item.label : undefined}
